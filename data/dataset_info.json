@@ -1,4 +1,7 @@
 {
+  "chemistrySpecialtyIssues":{
+    "file_name":"ChemistrySpecialtyIssues.json"
+  },
   "identity": {
     "file_name": "identity.json"
   },
