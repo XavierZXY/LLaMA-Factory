@@ -2,7 +2,7 @@
 
 ### model
 model_name_or_path: Qwen/Qwen2.5-7B-Instruct
-adapter_name_or_path: saves/qwen2-7b/lora/sft-4Batches
+adapter_name_or_path: saves/qwen2-7b/lora/sft-10
 template: qwen
 finetuning_type: lora
 

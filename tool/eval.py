@@ -13,13 +13,17 @@ from transformers import AutoTokenizer
 
 load_dotenv()
 # Set up rich logging
+# Get current time for log filename
+# log_filename = f"eval_{time.strftime('%Y%m%d_%H%M%S')}.log"
+log_filename = "log/4Batch.log"
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(message)s",
     datefmt="[%X]",
     handlers=[
         RichHandler(rich_tracebacks=True, markup=True),
-        logging.FileHandler("test.log", mode="w", encoding="utf-8"),
+        logging.FileHandler(log_filename, mode="w", encoding="utf-8"),
     ],
 )
 
@@ -39,7 +43,9 @@ judge = OpenAI(
         "OPENAI_API_KEY", "sk-123"
     ),  # Get API key from environment variable or replace with your key
     base_url=os.environ.get(
-        "OPENAI_API_BASE", "https://api.siliconflow.cn/v1"
+        # "OPENAI_API_BASE", "https://api.siliconflow.cn/v1"
+        "OPENAI_API_BASE",
+        "http://127.0.0.1:10081/v1",
     ),  # Optional: configure custom base URL
 )
 
@@ -69,7 +75,7 @@ def get_response(
 def judge_qwen(answer, response):
     # Using OpenAI API instead of local Qwen model
     try:
-        prompt = f"请检测以下两段文本的相似度是多少，特别是其中的参考文献。给出一个0-10的分数，其中0表示完全不相似，10表示完全相同。只需回复一个0-10之间的整数分数，不要有其他解释。参考答案: {answer}实际回答:{response}相似度分数(0-10):"
+        prompt = f"请检测以下两段文本的相似度是多少，特别要注意其中的参考文献，如果其中一个有参考文献，另一个没有参考文献，或者错误的参考文献，则不能高于5分。给出一个0-10的分数，其中0表示完全不相似，10表示完全相同。只需回复一个0-10之间的整数分数，不要有其他解释。参考答案: {answer}实际回答:{response}相似度分数(0-10):"
 
         messages = [
             {
@@ -80,7 +86,8 @@ def judge_qwen(answer, response):
         ]
 
         completion = judge.chat.completions.create(
-            model="THUDM/GLM-4-32B-0414",  # Using GPT-4 for better evaluation
+            # model="THUDM/GLM-4-32B-0414",  # Using GPT-4 for better evaluation
+            model="Qwen/Qwen2.5-7B-Instruct",  # Using GPT-4 for better evaluation
             messages=messages,
             max_tokens=10,
             temperature=0.0,  # Deterministic output
@@ -105,7 +112,7 @@ def judge_qwen(answer, response):
         return score
     except Exception as e:
         log.error(f"Judge --- Error calling OpenAI API: {e}")
-        return 5
+        return -1
 
 
 def main():
