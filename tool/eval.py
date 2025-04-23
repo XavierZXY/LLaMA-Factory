@@ -15,7 +15,7 @@ load_dotenv()
 # Set up rich logging
 # Get current time for log filename
 # log_filename = f"eval_{time.strftime('%Y%m%d_%H%M%S')}.log"
-log_filename = "log/4Batch.log"
+log_filename = "log/9900s-100sample.log"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -129,20 +129,20 @@ def main():
 
     log.info(f"Evaluating {len(data)} items...")
 
-    for i, item in enumerate(data[:200]):
+    for i, item in enumerate(data[:100]):
         instruction = item["instruction"]
         reference_output = item["output"]
 
         log.info(f"\nItem {i + 1}/{len(data)}:")
         log.info(f"Instruction: {instruction}")
         log.info(
-            f"Reference Output: {reference_output[:100]}..."
+            f"Reference Output: {reference_output}"
         )  # Show beginning of reference output
 
         # 2. Get model response using the instruction
         model_response = get_response(instruction)
         log.info(
-            f"Model response: {model_response[:100]}..."
+            f"Model response: {model_response}"
         )  # Show beginning of response
 
         # 3. Judge the quality of the response
