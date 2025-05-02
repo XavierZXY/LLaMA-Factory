@@ -178,3 +178,5 @@ output/
 wandb/
 swanlog/
 generated_predictions.jsonl
+.gitignore
+data/empowerfactory.json

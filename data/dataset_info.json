@@ -1,9 +1,12 @@
 {
-  "newEnergyIssue1":{
-    "file_name":"NewEnergyIssue1.json"
+  "empowerfactory": {
+    "file_name": "empowerfactory.json"
   },
-  "chemistrySpecialtyIssues":{
-    "file_name":"ChemistrySpecialtyIssues.json"
+  "newEnergyIssue1": {
+    "file_name": "NewEnergyIssue1.json"
+  },
+  "chemistrySpecialtyIssues": {
+    "file_name": "ChemistrySpecialtyIssues.json"
   },
   "identity": {
     "file_name": "identity.json"
