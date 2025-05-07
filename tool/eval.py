@@ -14,8 +14,7 @@ from transformers import AutoTokenizer
 load_dotenv()
 # Set up rich logging
 # Get current time for log filename
-# log_filename = f"eval_{time.strftime('%Y%m%d_%H%M%S')}.log"
-log_filename = "log/9900s-100sample.log"
+log_filename = f"log/eval_{time.strftime('%Y%m%d_%H%M%S')}.log"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,7 +34,9 @@ client = OpenAI(
         "OPENAI_API_KEY", "sk-123"
     ),  # Get API key from environment variable or replace with your key
     base_url=os.environ.get(
-        "OPENAI_API_BASE", "http://127.0.0.1:10080/v1"
+        "OPENAI_API_BASE",
+        "http://127.0.0.1:10080/v1",
+        # "OPENAI_API_BASE", "http://127.0.0.1:9092/v1"
     ),  # Optional: configure custom base URL
 )
 judge = OpenAI(
@@ -45,25 +46,30 @@ judge = OpenAI(
     base_url=os.environ.get(
         # "OPENAI_API_BASE", "https://api.siliconflow.cn/v1"
         "OPENAI_API_BASE",
-        "http://127.0.0.1:10081/v1",
+        "http://10.16.189.166:10080/v1",
     ),  # Optional: configure custom base URL
 )
 
 
 def get_response(
-    prompt="Give me a short introduction to large language model.",
+    prompt="You are a helpful assistant.Give me a short answer",
 ):
     # Using OpenAI API instead of local model
     try:
         messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
+            {
+                "role": "system",
+                "content": "You are a helpful assistant.Give me a short answer.",
+            },
             {"role": "user", "content": prompt},
         ]
 
         response = client.chat.completions.create(
+            # model="Qwen3-8B",  # or any other model like "gpt-4"
             model="test",  # or any other model like "gpt-4"
             messages=messages,
             max_tokens=512,
+            extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         )
 
         return response.choices[0].message.content
@@ -118,22 +124,23 @@ def judge_qwen(answer, response):
 def main():
     # 1. Read data from JSON file
     with open(
-        "./data_self/test/ChemistrySpecialtyIssues_test.json",
+        "./data_self/empowerfactory_test.json",
         "r",
         encoding="utf-8",
     ) as f:
         data = json.load(f)
 
     total_score = 0
-    max_possible_score = len(data) * 10  # Maximum score is 10 per item
+    data_sample = data[:200]  # Sample first 100 items for evaluation
+    max_possible_score = len(data_sample) * 10  # Maximum score is 10 per item
 
-    log.info(f"Evaluating {len(data)} items...")
+    log.info(f"Evaluating {len(data_sample)} items...")
 
-    for i, item in enumerate(data[:100]):
+    for i, item in enumerate(data_sample):
         instruction = item["instruction"]
         reference_output = item["output"]
 
-        log.info(f"\nItem {i + 1}/{len(data)}:")
+        log.info(f"\nItem {i + 1}/{len(data_sample)}:")
         log.info(f"Instruction: {instruction}")
         log.info(
             f"Reference Output: {reference_output}"
