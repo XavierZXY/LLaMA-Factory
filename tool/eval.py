@@ -59,7 +59,7 @@ def get_response(
         messages = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant.Give me a short answer.",
+                "content": "You are a helpful assistant.Give me a short answer.Do not give a thinking process.",
             },
             {"role": "user", "content": prompt},
         ]
@@ -81,7 +81,7 @@ def get_response(
 def judge_qwen(answer, response):
     # Using OpenAI API instead of local Qwen model
     try:
-        prompt = f"请检测以下两段文本的相似度是多少，特别要注意其中的参考文献，如果其中一个有参考文献，另一个没有参考文献，或者错误的参考文献，则不能高于5分。给出一个0-10的分数，其中0表示完全不相似，10表示完全相同。只需回复一个0-10之间的整数分数，不要有其他解释。参考答案: {answer}实际回答:{response}相似度分数(0-10):"
+        prompt = f"请检测以下两段文本的相似度是多少，特别要注意其中的参考文献，如果其中一个有参考文献，另一个没有参考文献，或者错误的参考文献，则不能高于8分。给出一个0-10的分数，其中0表示完全不相似，10表示完全相同。只需回复一个0-10之间的整数分数，不要有其他解释。参考答案: {answer}实际回答:{response}相似度分数(0-10):"
 
         messages = [
             {
@@ -124,14 +124,15 @@ def judge_qwen(answer, response):
 def main():
     # 1. Read data from JSON file
     with open(
-        "./data_self/empowerfactory_test.json",
+        # "./data_self/empowerfactory_test.json",
+        "./data_self/train/relay_protection_issues_export_test.json",
         "r",
         encoding="utf-8",
     ) as f:
         data = json.load(f)
 
     total_score = 0
-    data_sample = data[:200]  # Sample first 100 items for evaluation
+    data_sample = data[:100]  # Sample first 100 items for evaluation
     max_possible_score = len(data_sample) * 10  # Maximum score is 10 per item
 
     log.info(f"Evaluating {len(data_sample)} items...")

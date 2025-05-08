@@ -7,12 +7,13 @@ do_train: true
 finetuning_type: lora
 lora_target: all
 lora_rank: 16
-lora_alpha: 16
+lora_alpha: 32
 lora_dropout: 0.05
 # deepspeed: examples/deepspeed/ds_z3_config.json
 
 ### dataset
-dataset: empowerfactory
+dataset: relay_protection_issues_export_sharegpt
+# dataset: relay_protection_issues_export
 template: qwen
 cutoff_len: 1024
 overwrite_cache: true
@@ -20,8 +21,8 @@ preprocessing_num_workers: 16
 dataloader_pin_memory: true # 新增参数，启用内存锁页
 
 ### output
-output_dir: saves/qwen3-8b/lora/sft-lora16
-logging_steps: 100
+output_dir: saves/qwen3-8b/lora/sft-lora16-rank32/relay_protection_issues_export_sharegpt
+logging_steps: 50
 save_steps: 100
 plot_loss: true
 overwrite_output_dir: true
@@ -30,20 +31,20 @@ overwrite_output_dir: true
 per_device_train_batch_size: 8
 gradient_accumulation_steps: 16
 learning_rate: 1.0e-4
-num_train_epochs: 30.0
+num_train_epochs: 50.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: saves/qwen3-8b/lora/sft-lora16/checkpoint-6700
+# resume_from_checkpoint: saves/qwen3-8b/lora/sft-lora16-rank32/relay_protection_issues_export/checkpoint-400
 # flash_attn: fa2
 
 ### eval
 val_size: 0.1
 per_device_eval_batch_size: 1
 eval_strategy: steps
-eval_steps: 500
+eval_steps: 100
 
 ### wandb
 report_to: wandb
-run_name: qwen3-8b-lora-16 # optional
+run_name: qwen3-8b-lora-16-rank-32-relay_protection_issues_export_sharegpt # optional

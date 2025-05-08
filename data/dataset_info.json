@@ -1,4 +1,24 @@
 {
+  "relay_protection_issues_export_sharegpt": {
+    "file_name": "relay_protection_issues_export_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "relay_protection_issues_export": {
+    "file_name": "relay_protection_issues_export.json"
+  },
+  "empowerfactory_mini": {
+    "file_name": "empowerfactory_mini.json"
+  },
   "empowerfactory": {
     "file_name": "empowerfactory.json"
   },
