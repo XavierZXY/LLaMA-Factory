@@ -99,6 +99,48 @@ def split_dataset_by_interval(input_file, output_dir, interval=5):
     print(f"Files saved to {output_dir}")
 
 
+def extract_first_n_samples(input_file, output_dir, n_samples=200):
+    """Extract first N samples from the dataset as test set.
+
+    Args:
+        input_file: Path to the input JSON file
+        output_dir: Directory to save the output files
+        n_samples: Number of samples to extract as test set (default: 200)
+    """
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Load the dataset
+    with open(input_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Split the data by taking first N samples
+    test_data = data[:n_samples]
+    train_data = data[n_samples:]
+
+    # Get base filename without extension
+    base_name = Path(input_file).stem
+
+    # Save test data
+    test_file = os.path.join(output_dir, f"{base_name}_test.json")
+    with open(test_file, "w", encoding="utf-8") as f:
+        json.dump(test_data, f, ensure_ascii=False, indent=2)
+
+    # Save train data
+    train_file = os.path.join(output_dir, f"{base_name}_train.json")
+    with open(train_file, "w", encoding="utf-8") as f:
+        json.dump(train_data, f, ensure_ascii=False, indent=2)
+
+    print(f"Total data: {len(data)} items")
+    print(
+        f"Train data: {len(train_data)} items ({len(train_data) / len(data):.1%})"
+    )
+    print(
+        f"Test data: {len(test_data)} items ({len(test_data) / len(data):.1%})"
+    )
+    print(f"Files saved to {output_dir}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Split dataset into training and testing sets"
@@ -126,9 +168,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--split-method",
         "-m",
-        choices=["random", "interval"],
+        choices=["random", "interval", "first_n"],
         default="random",
-        help="Method to split the dataset: 'random' for random split, 'interval' for taking every nth sample",
+        help="Method to split the dataset: 'random' for random split, 'interval' for taking every nth sample, 'first_n' for taking first N samples",
     )
     parser.add_argument(
         "--interval",
@@ -137,14 +179,23 @@ if __name__ == "__main__":
         default=5,
         help="Interval for splitting data (used when split-method is 'interval')",
     )
+    parser.add_argument(
+        "--n-samples",
+        "-n",
+        type=int,
+        default=200,
+        help="Number of samples to extract as test set (used when split-method is 'first_n')",
+    )
 
     args = parser.parse_args()
 
     data_list = output_list = [
-        "relay_protection_issues_export.json",
+        "relay_protection_issues_export_mini.json",
     ]
     for input in data_list:
         if args.split_method == "random":
             split_dataset(input, args.output_dir, args.test_ratio, args.seed)
-        else:
+        elif args.split_method == "interval":
             split_dataset_by_interval(input, args.output_dir, args.interval)
+        else:  # first_n
+            extract_first_n_samples(input, args.output_dir, args.n_samples)

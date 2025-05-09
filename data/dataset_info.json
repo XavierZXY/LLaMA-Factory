@@ -1,4 +1,7 @@
 {
+  "relay_protection_issues_export_mini": {
+    "file_name": "relay_protection_issues_export_mini.json"
+  },
   "relay_protection_issues_export_sharegpt": {
     "file_name": "relay_protection_issues_export_sharegpt.json",
     "formatting": "sharegpt",

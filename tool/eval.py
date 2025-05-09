@@ -58,7 +58,7 @@ def get_response(
         messages = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant.",
+                "content": "You are a helpful assistant. Do not provide the reasoning process. Give a concise answer. Do not answer in bullet points.",
             },
             {"role": "user", "content": prompt},
         ]
@@ -120,54 +120,6 @@ def judge_qwen(answer, response):
         return -1
 
 
-def main():
-    # 1. Read data from JSON file
-    with open(
-        # "./data_self/empowerfactory_test.json",
-        "./data/relay_protection_issues_export.json",
-        "r",
-        encoding="utf-8",
-    ) as f:
-        data = json.load(f)
-
-    total_score = 0
-    data_sample = data[:100]  # Sample first 100 items for evaluation
-    max_possible_score = len(data_sample) * 10  # Maximum score is 10 per item
-
-    log.info(f"Evaluating {len(data_sample)} items...")
-
-    for i, item in enumerate(data_sample):
-        instruction = item["instruction"]
-        reference_output = item["output"]
-
-        log.info(f"\nItem {i + 1}/{len(data_sample)}:")
-        log.info(f"Instruction: {instruction}")
-        log.info(
-            f"Reference Output: {reference_output}"
-        )  # Show beginning of reference output
-
-        # 2. Get model response using the instruction
-        model_response = get_response(instruction)
-        log.info(
-            f"Model response: {model_response}"
-        )  # Show beginning of response
-
-        # 3. Judge the quality of the response
-        score = judge_qwen(reference_output, model_response)
-        log.info(f"Score: {score}/10")
-
-        # 4. Accumulate scores
-        total_score += score
-        time.sleep(1)  # Add slight delay between evaluations
-
-    # 5. Normalize score to percentage
-    final_score_percentage = (total_score / max_possible_score) * 100
-
-    log.info(f"\n=== Evaluation Complete ===")
-    log.info(f"Total Score: {total_score}/{max_possible_score}")
-    log.info(f"Normalized Score: {final_score_percentage:.2f}%")
-
-
 async def get_response_async(
     prompt="You are a helpful assistant.Give me a short answer",
 ):
@@ -175,7 +127,7 @@ async def get_response_async(
         messages = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant.",
+                "content": "You are a helpful assistant. Do not provide the reasoning process. Give a concise answer. Do not answer in bullet points.",
             },
             {"role": "user", "content": prompt},
         ]
@@ -237,32 +189,39 @@ async def judge_qwen_async(answer, response):
         return -1
 
 
-async def process_item(item: Dict) -> int:
+async def process_item(item: Dict, item_id: int) -> int:
     instruction = item["instruction"]
     reference_output = item["output"]
 
-    log.info(f"\nProcessing instruction: {instruction[:100]}...")
+    log.info(
+        f"\n[ID: {item_id}] Processing instruction: {instruction[:100]}..."
+    )
 
     model_response = await get_response_async(instruction)
-    log.info(f"Model response: {model_response}")
-    log.info(f"Reference output: {reference_output}")
+    log.info(f"[ID: {item_id}] Model response: {model_response}")
+    log.info(f"[ID: {item_id}] Reference output: {reference_output}")
 
     score = await judge_qwen_async(reference_output, model_response)
 
-    log.info(f"Score: {score}/10")
+    log.info(f"[ID: {item_id}] Score: {score}/10")
     return score
 
 
+# data/relay_protection_issues_export.json
+# data/relay_protection_issues_export_mini.json
+# data_self/train/relay_protection_issues_export_test.json
+# data_self/mini/train/relay_protection_issues_export_mini_test.json
+# data_self/mini/train/relay_protection_issues_export_mini_test.json
 async def main():
     # 1. Read data from JSON file
     with open(
-        "./data/relay_protection_issues_export.json",
+        "./data_self/mini/train/relay_protection_issues_export_mini_test.json",
         "r",
         encoding="utf-8",
     ) as f:
         data = json.load(f)
 
-    data_sample = data[:100]  # Sample first 100 items for evaluation
+    data_sample = data  # Sample first 100 items for evaluation
     max_possible_score = len(data_sample) * 10
 
     log.info(f"Evaluating {len(data_sample)} items...")
@@ -270,11 +229,14 @@ async def main():
     # Process items concurrently with a semaphore to limit concurrent requests
     semaphore = asyncio.Semaphore(16)  # Limit concurrent requests to 16
 
-    async def process_with_semaphore(item):
+    async def process_with_semaphore(item, item_id):
         async with semaphore:
-            return await process_item(item)
+            return await process_item(item, item_id)
 
-    tasks = [process_with_semaphore(item) for item in data_sample]
+    tasks = [
+        process_with_semaphore(item, idx)
+        for idx, item in enumerate(data_sample)
+    ]
     scores = await asyncio.gather(*tasks)
 
     total_score = sum(scores)
