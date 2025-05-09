@@ -37,14 +37,14 @@ log = logging.getLogger("eval")
 client = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "sk-123"),
     base_url=os.environ.get(
-        "OPENAI_API_BASE",
+        "OPENAI_API_BASE_E",
         "http://127.0.0.1:10080/v1",
     ),
 )
 judge = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "sk-123"),
     base_url=os.environ.get(
-        "OPENAI_API_BASE",
+        "OPENAI_API_BASE_E",
         "http://10.16.189.166:10080/v1",
     ),
 )
@@ -149,10 +149,14 @@ async def get_response_async(
 async def judge_qwen_async(answer, response):
     try:
         prompt = (
-            "请检测以下两段文本的相似度是多少，特别要注意其中的参考文献，如果其中一个有参"
-            "考文献，另一个没有参考文献，或者错误的参考文献，则不能高于6分。给出一个0-10的分数，"
-            "其中0表示完全不相似，10表示完全相同。只需回复一个0-10之间的整数分数，不要有其他解释。"
-            f"参考答案: {answer}实际回答:{response}相似度分数(0-10):"
+            "请根据参考答案的内容，评估实际回答的准确性和完整性。评分标准如下：\n"
+            "1. 如果实际回答完全符合参考答案的关键信息和要点，得10分\n"
+            "2. 如果实际回答包含了大部分关键信息但有遗漏或不够准确，得7-9分\n"
+            "3. 如果实际回答只包含了部分关键信息或有明显错误，得4-6分\n"
+            "4. 如果实际回答与参考答案关键信息不符或严重不足，得1-3分\n"
+            "5. 如果实际回答完全错误或文不对题，得0分\n"
+            "请给出一个0-10的整数分数，不要有其他解释。\n"
+            f"参考答案:{answer}\n实际回答:{response}\n评分(0-10):"
         )
 
         messages = [

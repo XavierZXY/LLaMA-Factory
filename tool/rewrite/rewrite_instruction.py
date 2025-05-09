@@ -44,10 +44,10 @@ def save_json_data(data: list[dict], file_path: str):
 def rewrite_with_gpt(instruction: str, output: str) -> list[tuple]:
     """Rewrite instruction and output using GPT to generate 5 different versions."""
     prompt = f"""请帮我将以下问题和答案改写成5个不同的版本，每个版本都要保持原意但使用完全不同的表达方式。要求：
-1. 每个问题(instruction)都需要完全改写，使用不同的表达方式但保持原意
-2. 每个答案(output)可以简单改写，但不要改变原意或产生歧义
+1. 每个问题(instruction)都需要完全改写，使用不同的表达方式但保持原意，如有参考文献，不要省略参考文献
+2. 每个答案(output)可以简单改写，但不要改变原意或产生歧义，不要过度减少文本长度，如有参考文献，不要省略参考文献
 3. 保持中文输出
-4. 5个版本之间要有明显的区别，不能过于相似
+4. 5个版本之间的instruction要有明显的区别，不能过于相似
 
 原始问题：{instruction}
 原始答案：{output}
