@@ -1,4 +1,7 @@
 {
+  "relay_protection_issues_export_re": {
+    "file_name": "relay_protection_issues_export_re.json"
+  },
   "relay_protection_issues_export_mini_test": {
     "file_name": "relay_protection_issues_export_mini_test.json"
   },

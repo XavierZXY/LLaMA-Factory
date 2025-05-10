@@ -1,3 +1,4 @@
+tool/rewrite/data/rewritten
 data_self/
 models/
 # Byte-compiled / optimized / DLL files
@@ -180,3 +181,10 @@ swanlog/
 generated_predictions.jsonl
 .gitignore
 data/empowerfactory.json
+data/relay_protection_issues_export_re.json
+tool/rewrite/data/relay_protection_issues_export.json
+tool/rewrite/data/rewritten_output.json
+tool/rewrite/data/rewritten_mini.json
+data/rewritten_mini.json
+tool/rewrite/data/rewritten_output.json
+tool/rewrite/data/rewritten_mini.json

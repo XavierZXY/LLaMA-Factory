@@ -37,14 +37,14 @@ log = logging.getLogger("eval")
 client = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "sk-123"),
     base_url=os.environ.get(
-        "OPENAI_API_BASE_E",
-        "http://127.0.0.1:10080/v1",
+        "OPENAI_API_BASE",
+        "http://127.0.0.1:10084/v1",
     ),
 )
 judge = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "sk-123"),
     base_url=os.environ.get(
-        "OPENAI_API_BASE_E",
+        "OPENAI_API_BASE",
         "http://10.16.189.166:10080/v1",
     ),
 )
@@ -155,6 +155,7 @@ async def judge_qwen_async(answer, response):
             "3. 如果实际回答只包含了部分关键信息或有明显错误，得4-6分\n"
             "4. 如果实际回答与参考答案关键信息不符或严重不足，得1-3分\n"
             "5. 如果实际回答完全错误或文不对题，得0分\n"
+            "6. 如果实际回答中包含了参考文献，但参考答案中没有，或者参考答案中有错误的参考文献，得分不高于6分\n"
             "请给出一个0-10的整数分数，不要有其他解释。\n"
             f"参考答案:{answer}\n实际回答:{response}\n评分(0-10):"
         )
@@ -219,13 +220,13 @@ async def process_item(item: Dict, item_id: int) -> int:
 async def main():
     # 1. Read data from JSON file
     with open(
-        "./data_self/mini/train/relay_protection_issues_export_mini_test.json",
+        "./data/empowerfactory.json",
         "r",
         encoding="utf-8",
     ) as f:
         data = json.load(f)
 
-    data_sample = data  # Sample first 100 items for evaluation
+    data_sample = data[:100]  # Sample first 100 items for evaluation
     max_possible_score = len(data_sample) * 10
 
     log.info(f"Evaluating {len(data_sample)} items...")
