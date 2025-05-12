@@ -38,7 +38,8 @@ client = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "sk-123"),
     base_url=os.environ.get(
         "OPENAI_API_BASE",
-        "http://127.0.0.1:10084/v1",
+        "http://127.0.0.1:10082/v1",
+        # "http://ai.heils.cn:39997/v1",
     ),
 )
 judge = AsyncOpenAI(
@@ -127,13 +128,14 @@ async def get_response_async(
         messages = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant. Do not provide the reasoning process. Give a concise answer. Do not answer in bullet points.",
+                "content": "You are a helpful assistant. Do not provide the reasoning process.",
             },
             {"role": "user", "content": prompt},
         ]
 
         response = await client.chat.completions.create(
             model="test",
+            # model="qwen2.5-instruct",
             messages=messages,
             max_tokens=512,
             temperature=0.0,  # Set temperature to 0 for deterministic output
@@ -217,11 +219,14 @@ async def process_item(item: Dict, item_id: int) -> int:
 # data_self/train/relay_protection_issues_export_test.json
 # data_self/mini/train/relay_protection_issues_export_mini_test.json
 # data_self/mini/train/relay_protection_issues_export_mini_test.json
+# data/empowerfactory.json
+# data_self/empowerfactory_test.json
 async def main():
     # 1. Read data from JSON file
     with open(
-        "./data/empowerfactory.json",
-        "r",
+        # "./data_self/empowerfactory_test.json",
+        # "./data/relay_protection_issues_export_re.json",
+        "./data_self/chemical_engineering_issues_export.json",
         encoding="utf-8",
     ) as f:
         data = json.load(f)

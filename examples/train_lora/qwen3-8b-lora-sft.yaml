@@ -21,7 +21,7 @@ preprocessing_num_workers: 16
 dataloader_pin_memory: true # 新增参数，启用内存锁页
 
 ### output
-output_dir: saves/qwen3-8b/lora/sft-lora16-rank32/relay_protection_issues_export_re-g4
+output_dir: saves/qwen3-8b/lora/test
 logging_steps: 10
 save_steps: 50
 plot_loss: true
@@ -40,11 +40,11 @@ ddp_timeout: 180000000
 # flash_attn: fa2
 
 ### eval
-eval_dataset: relay_protection_issues_export_mini_test
-per_device_eval_batch_size: 1
-eval_strategy: steps
-eval_steps: 100
+# eval_dataset: relay_protection_issues_export_mini_test
+# per_device_eval_batch_size: 1
+# eval_strategy: steps
+# eval_steps: 100
 
 ### wandb
 report_to: wandb
-run_name: qwen3-8b-lora-16-rank-16-relay_protection_issues_export_re-g4 # optional
+run_name: qwen3-8b-lora-test # optional
