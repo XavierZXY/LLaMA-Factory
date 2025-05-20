@@ -1,9 +1,9 @@
+import asyncio
 import json
 import logging
 import os
-import asyncio
-from typing import Dict, List, Tuple
 from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, List, Tuple
 
 # OpenAI API configuration
 from dotenv import load_dotenv
@@ -48,12 +48,12 @@ def save_json_data(data: list[dict], file_path: str):
 
 
 async def rewrite_with_gpt(instruction: str, output: str) -> list[tuple]:
-    """Rewrite instruction and output using GPT to generate 5 different versions."""
-    prompt = f"""请帮我将以下问题和答案改写成5个不同的版本，每个版本都要保持原意但使用完全不同的表达方式。要求：
+    """Rewrite instruction and output using GPT to generate 2 different versions."""
+    prompt = f"""请帮我将以下问题和答案改写成2个不同的版本，每个版本都要保持原意但使用完全不同的表达方式。要求：
 1. 每个问题(instruction)都需要完全改写，使用不同的表达方式但保持原意，如有参考文献，不要省略参考文献
 2. 每个答案(output)可以简单改写，但不要改变原意或产生歧义，不要过度减少文本长度，如有参考文献，不要省略参考文献
 3. 保持中文输出
-4. 5个版本之间的instruction要有明显的区别，不能过于相似
+4. 2个版本之间的instruction要有明显的区别，不能过于相似
 5. 只返回JSON格式的结果，不要添加任何其他内容
 
 原始问题：{instruction}
@@ -69,18 +69,6 @@ async def rewrite_with_gpt(instruction: str, output: str) -> list[tuple]:
         {{
             "instruction": "改写后的问题2",
             "output": "改写后的答案2"
-        }},
-        {{
-            "instruction": "改写后的问题3",
-            "output": "改写后的答案3"
-        }},
-        {{
-            "instruction": "改写后的问题4",
-            "output": "改写后的答案4"
-        }},
-        {{
-            "instruction": "改写后的问题5",
-            "output": "改写后的答案5"
         }}
     ]
 }}"""
@@ -91,7 +79,7 @@ async def rewrite_with_gpt(instruction: str, output: str) -> list[tuple]:
             messages=[
                 {
                     "role": "system",
-                    "content": "你是一个专业的文本改写助手，擅长用不同的表达方式重写文本，同时保持原意。你需要为每个输入生成5个完全不同的改写版本。不要使用思考模式，严格按照指定格式返回结果。",
+                    "content": "你是一个专业的文本改写助手，擅长用不同的表达方式重写文本，同时保持原意。你需要为每个输入生成2个完全不同的改写版本。不要使用思考模式，严格按照指定格式返回结果。",
                 },
                 {"role": "user", "content": prompt},
             ],
@@ -105,21 +93,27 @@ async def rewrite_with_gpt(instruction: str, output: str) -> list[tuple]:
         ]
     except Exception as e:
         logger.error(f"Error in rewriting: {e}")
-        return [] * 5
+        return [] * 2
 
 
-async def process_batch(batch: List[dict], rewritten_data: List[dict], output_file: str) -> None:
+async def process_batch(
+    batch: List[dict], rewritten_data: List[dict], output_file: str
+) -> None:
     """Process a batch of items concurrently."""
     tasks = []
     for item in batch:
-        task = asyncio.create_task(rewrite_with_gpt(item["instruction"], item["output"]))
+        task = asyncio.create_task(
+            rewrite_with_gpt(item["instruction"], item["output"])
+        )
         tasks.append((item, task))
-    
+
     for item, task in tasks:
         try:
             versions = await task
             if not versions:
-                logger.warning(f"Skipping item due to generation failure: {item['instruction'][:50]}...")
+                logger.warning(
+                    f"Skipping item due to generation failure: {item['instruction'][:50]}..."
+                )
                 continue
 
             for new_instruction, new_output in versions:
@@ -129,10 +123,10 @@ async def process_batch(batch: List[dict], rewritten_data: List[dict], output_fi
                     "output": new_output,
                 }
                 rewritten_data.append(rewritten_item)
-                
+
                 # 每生成一个版本就保存一次
                 save_json_data(rewritten_data, output_file)
-                
+
         except Exception as e:
             logger.error(f"Error processing item: {e}")
             save_json_data(rewritten_data, output_file)
@@ -140,8 +134,8 @@ async def process_batch(batch: List[dict], rewritten_data: List[dict], output_fi
 
 async def main():
     # 输入和输出文件路径
-    input_file = "./data/relay_protection_issues_export.json"
-    output_file = "./data/rewritten/relay_protection_issues_export.json"
+    input_file = "./data_self/newpower/new_energy_issues_test.json"
+    output_file = "./data_self/newpower/new_energy_issues_re.json"
 
     # 加载数据
     data = load_json_data(input_file)
@@ -150,20 +144,26 @@ async def main():
     rewritten_data = []
     if os.path.exists(output_file):
         rewritten_data = load_json_data(output_file)
-        logger.info(f"Found existing output file with {len(rewritten_data)} items")
+        logger.info(
+            f"Found existing output file with {len(rewritten_data)} items"
+        )
 
     # 计算已处理的原始数据数量
-    processed_count = len(rewritten_data) // 5 if rewritten_data else 0
+    processed_count = len(rewritten_data) // 2 if rewritten_data else 0
     remaining_data = data[processed_count:]
 
     # 将数据分成批次处理
     for i in range(0, len(remaining_data), BATCH_SIZE):
-        batch = remaining_data[i:i + BATCH_SIZE]
+        batch = remaining_data[i : i + BATCH_SIZE]
         await process_batch(batch, rewritten_data, output_file)
-        logger.info(f"Processed batch {i//BATCH_SIZE + 1}/{(len(remaining_data) + BATCH_SIZE - 1)//BATCH_SIZE}")
+        logger.info(
+            f"Processed batch {i // BATCH_SIZE + 1}/{(len(remaining_data) + BATCH_SIZE - 1) // BATCH_SIZE}"
+        )
 
     logger.info(f"Rewriting completed. Results saved to {output_file}")
-    logger.info(f"Original items: {len(data)}, Rewritten items: {len(rewritten_data)}")
+    logger.info(
+        f"Original items: {len(data)}, Rewritten items: {len(rewritten_data)}"
+    )
 
 
 if __name__ == "__main__":

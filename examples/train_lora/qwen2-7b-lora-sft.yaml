@@ -12,17 +12,17 @@ lora_dropout: 0.05
 # deepspeed: examples/deepspeed/ds_z3_config.json
 
 ### dataset
-dataset: relay_protection_issues_export
+dataset: new_energy_issues
 template: qwen
-cutoff_len: 1024
+cutoff_len: 2048
 overwrite_cache: true
 preprocessing_num_workers: 16
 dataloader_pin_memory: true # 新增参数，启用内存锁页
 
 ### output
-output_dir: saves/qwen2-7b/lora/sft-lora16-rank32/rate-4/relay_protection_issues_export
-logging_steps: 100
-save_steps: 100
+output_dir: saves/qwen2-7b/lora/new_energy_issues
+logging_steps: 50
+save_steps: 500
 plot_loss: true
 overwrite_output_dir: true
 
@@ -30,21 +30,21 @@ overwrite_output_dir: true
 per_device_train_batch_size: 8
 gradient_accumulation_steps: 16
 learning_rate: 1.0e-4
-num_train_epochs: 20.0
+num_train_epochs: 30.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
-# resume_from_checkpoint: saves/qwen3-8b/lora/sft-lora16/checkpoint-6700
+resume_from_checkpoint: saves/qwen2-7b/lora/new_energy_issues/checkpoint-3000
 # flash_attn: fa2
 
 ### eval
-val_size: 0.1
+eval_dataset: new_energy_issues_re
 per_device_eval_batch_size: 1
-eval_strategy: steps
-eval_steps: 500
+eval_strategy: epoch
+# eval_steps: 5
 
 ### wandb
 report_to: wandb
-run_name: qwen2-7b-lora-16-rank-32-relay_protection_issues_export # optional
+run_name: qwen2-7b-lora-16-rank-32-new_energy_issues # optional
 

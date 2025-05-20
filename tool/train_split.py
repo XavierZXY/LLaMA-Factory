@@ -155,7 +155,7 @@ if __name__ == "__main__":
         "--test-ratio",
         "-r",
         type=float,
-        default=0.02,
+        default=0.1,
         help="Ratio of data to use for testing",
     )
     parser.add_argument(
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data_list = output_list = [
-        "relay_protection_issues_export_mini.json",
+        "data_self/newpower/new_energy_issues.json",
     ]
     for input in data_list:
         if args.split_method == "random":

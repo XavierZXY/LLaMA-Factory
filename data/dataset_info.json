@@ -1,4 +1,38 @@
 {
+  "new_energy_issues_sharegpt": {
+    "file_name": "new_energy_issues_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "new_energy_issues_re_sharegpt": {
+    "file_name": "new_energy_issues_re_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "new_energy_issues_re": {
+    "file_name": "new_energy_issues_re.json"
+  },
+  "new_energy_issues": {
+    "file_name": "new_energy_issues.json"
+  },
   "relay_protection_issues_export_re": {
     "file_name": "relay_protection_issues_export_re.json"
   },

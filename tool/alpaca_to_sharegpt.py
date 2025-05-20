@@ -7,7 +7,7 @@ from typing import List, Dict, Any, Optional
 
 def convert_alpaca_to_openai(
     alpaca_data: List[Dict[str, Any]],
-    system_prompt: str = "You are a helpful assistant."
+    system_prompt: str = "你是一个新能源相关问题的专家助手。",
 ) -> List[Dict[str, Any]]:
     """
     Convert Alpaca format data to OpenAI format.
@@ -61,7 +61,7 @@ def main():
     parser = argparse.ArgumentParser(description="Convert Alpaca format to OpenAI format")
     parser.add_argument("input_file", help="Input file in Alpaca format")
     parser.add_argument("output_file", help="Output file in OpenAI format")
-    parser.add_argument("--system-prompt", default="You are a helpful assistant.",
+    parser.add_argument("--system-prompt", default="你是一个新能源相关问题的专家助手。",
                       help="System prompt to add to each conversation")
     
     args = parser.parse_args()
