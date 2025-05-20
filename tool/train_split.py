@@ -190,7 +190,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data_list = output_list = [
-        "data_self/newpower/new_energy_issues.json",
+        "data_self/temp/hydropower_issues.json",
     ]
     for input in data_list:
         if args.split_method == "random":

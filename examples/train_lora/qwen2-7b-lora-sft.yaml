@@ -12,7 +12,7 @@ lora_dropout: 0.05
 # deepspeed: examples/deepspeed/ds_z3_config.json
 
 ### dataset
-dataset: new_energy_issues
+dataset: hydropower_issues
 template: qwen
 cutoff_len: 2048
 overwrite_cache: true
@@ -20,7 +20,7 @@ preprocessing_num_workers: 16
 dataloader_pin_memory: true # 新增参数，启用内存锁页
 
 ### output
-output_dir: saves/qwen2-7b/lora/new_energy_issues
+output_dir: saves/qwen2-7b/lora/hydropower_issues
 logging_steps: 50
 save_steps: 500
 plot_loss: true
@@ -35,16 +35,16 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: saves/qwen2-7b/lora/new_energy_issues/checkpoint-3000
+# resume_from_checkpoint: saves/qwen2-7b/lora/new_energy_issues/checkpoint-3000
 # flash_attn: fa2
 
 ### eval
-eval_dataset: new_energy_issues_re
+eval_dataset: hydropower_issues_re
 per_device_eval_batch_size: 1
 eval_strategy: epoch
 # eval_steps: 5
 
 ### wandb
 report_to: wandb
-run_name: qwen2-7b-lora-16-rank-32-new_energy_issues # optional
+run_name: qwen2-7b-lora-16-rank-32-hydropower_issues # optional
 

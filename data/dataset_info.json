@@ -1,4 +1,21 @@
 {
+  "hydropower_issues_re": {
+    "file_name": "hydropower_issues_re.json"
+  },
+  "hydropower_issues": {
+    "file_name": "hydropower_issues.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
   "new_energy_issues_sharegpt": {
     "file_name": "new_energy_issues_sharegpt.json",
     "formatting": "sharegpt",
