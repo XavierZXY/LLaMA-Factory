@@ -56,7 +56,7 @@ def main():
     parser.add_argument("output_file", help="Output file in OpenAI format")
     parser.add_argument(
         "--system-prompt",
-        default="你是一个水电相关问题的专家助手。",
+        default="你是一个火电相关问题的专家助手。",
         help="System prompt to add to each conversation",
     )
 

@@ -1,4 +1,21 @@
 {
+  "firepower_issues_re": {
+    "file_name": "firepower_issues_re.json"
+  },
+  "firepower_issues": {
+    "file_name": "firepower_issues.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
   "hydropower_issues_re": {
     "file_name": "hydropower_issues_re.json"
   },

@@ -134,8 +134,8 @@ async def process_batch(
 
 async def main():
     # 输入和输出文件路径
-    input_file = "./data_self/temp/hydropower_issues_test.json"
-    output_file = "./data_self/temp/hydropower_issues_test_re.json"
+    input_file = "./data_self/firepower/firepower_test.json"
+    output_file = "./data_self/firepower/firepower_test_re.json"
 
     # 加载数据
     data = load_json_data(input_file)
