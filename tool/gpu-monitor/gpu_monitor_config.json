@@ -1,0 +1,8 @@
+{
+    "temperature_threshold": 85,
+    "monitor_interval": 60,
+    "overheat_duration": 600,
+    "cooldown_duration": 36000,
+    "yaml_path": "examples/train_lora/qwen2-7b-lora-sft.yaml",
+    "checkpoint_dir": "saves/qwen2-7b/lora/firepower_issues"
+}

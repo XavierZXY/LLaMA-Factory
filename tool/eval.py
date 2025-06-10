@@ -38,8 +38,8 @@ client = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "sk-123"),
     base_url=os.environ.get(
         "OPENAI_API_BASE",
-        # "http://127.0.0.1:10080/v1",
-        "http://ai.heils.cn:39997/v1",
+        "http://127.0.0.1:10080/v1",
+        # "http://ai.heils.cn:39997/v1",
     ),
 )
 judge = AsyncOpenAI(
@@ -128,14 +128,14 @@ async def get_response_async(
         messages = [
             {
                 "role": "system",
-                "content": "你是一个新能源相关问题的专家助手。",
+                "content": "你是一个火电相关问题的专家助手。",
             },
             {"role": "user", "content": prompt},
         ]
 
         response = await client.chat.completions.create(
-            # model="test",
-            model="qwen2.5-7b",
+            model="test",
+            # model="qwen2.5-7b",
             messages=messages,
             max_tokens=512,
             temperature=0.0,  # Set temperature to 0 for deterministic output
@@ -229,12 +229,13 @@ async def main():
     with open(
         # "./data_self/empowerfactory_test.json",
         # "./data/relay_protection_issues_export_re.json",
-        "./data_self/newpower/new_energy_issues.json",
+        "./data_self/firepower/firepower.json",
         encoding="utf-8",
     ) as f:
         data = json.load(f)
 
     data_sample = data[:500]  # Sample first 100 items for evaluation
+    # data_sample = data  # Sample first 100 items for evaluation
     max_possible_score = len(data_sample) * 10
 
     log.info(f"Evaluating {len(data_sample)} items...")

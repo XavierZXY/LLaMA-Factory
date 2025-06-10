@@ -35,7 +35,7 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
-# resume_from_checkpoint: saves/qwen2-7b/lora/new_energy_issues/checkpoint-3000
+resume_from_checkpoint: saves/qwen2-7b/lora/firepower_issues/checkpoint-6000
 # flash_attn: fa2
 
 ### eval
