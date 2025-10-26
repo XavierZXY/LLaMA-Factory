@@ -45,7 +45,7 @@ weight_decay: 0.001
 max_grad_norm: 1.0
 bf16: true                       # 使用bfloat16混合精度，节省显存并加速训练
 ddp_timeout: 180000000           # 分布式训练超时时间(毫秒)
-esume_from_checkpoint: null     # 从检查点恢复训练，null表示从头开始
+resume_from_checkpoint: null     # 从检查点恢复训练，null表示从头开始
 gradient_checkpointing: true    # 关闭梯度检查点，用显存换速度（256GB显存充足）
 dataloader_pin_memory: true      # 启用内存锁定，加速数据传输
 remove_unused_columns: false     # 保留所有数据列，多模态训练必需

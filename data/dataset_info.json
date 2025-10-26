@@ -730,5 +730,75 @@
       "prompt": "content"
     },
     "folder": "python"
+  },
+  "IRdata": {
+    "file_name": "/wekafs/takisobe/haisenhe/datasets/IRdata/cot_dataset.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "la1": {
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la1/cot_dataset.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "la2": {
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la2/cot_dataset.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "la3": {
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la3/cot_dataset.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "la4": {
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la4/cot_dataset.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
   }
 }

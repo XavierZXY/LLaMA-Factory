@@ -12,14 +12,14 @@ lora_rank: 8
 lora_target: all
 
 ### dataset
-dataset: la1,la2          # 数据集名称，在dataset_info.json中定义
-template: qwen2_vl          # 对话模板，必须与模型匹配
-media_dir: /wekafs/takisobe/haisenhe/DataPipeline  # 媒体文件(图像/视频)根目录
-cutoff_len: 2048
-max_samples: 1000
+dataset: la1,la2          
+template: qwen2_vl         
+media_dir: /wekafs/takisobe/haisenhe/DataPipeline
+cutoff_len: 16384
+max_samples: 20000
 overwrite_cache: true
 preprocessing_num_workers: 64
-dataloader_num_workers: 16
+dataloader_num_workers: 64
 
 ### output
 output_dir: /wekafs/takisobe/zxy/models/sft/qwen-ir
