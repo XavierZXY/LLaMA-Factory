@@ -746,7 +746,7 @@
     }
   },
   "la1": {
-    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la1/cot_dataset.json",
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la1/train_dataset.json",
     "formatting": "sharegpt",
     "columns": {
       "messages": "messages",
@@ -760,7 +760,7 @@
     }
   },
   "la2": {
-    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la2/cot_dataset.json",
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la2/train_dataset.json",
     "formatting": "sharegpt",
     "columns": {
       "messages": "messages",
@@ -774,7 +774,7 @@
     }
   },
   "la3": {
-    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la3/cot_dataset.json",
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la3/train_dataset.json",
     "formatting": "sharegpt",
     "columns": {
       "messages": "messages",
@@ -788,7 +788,7 @@
     }
   },
   "la4": {
-    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la4/cot_dataset.json",
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/la4/train_dataset.json",
     "formatting": "sharegpt",
     "columns": {
       "messages": "messages",
