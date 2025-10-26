@@ -13,7 +13,7 @@ lora_alpha: 64
 lora_target: all
 
 ### dataset
-dataset: la1,la2          
+dataset: la1,la2,la3,la4          
 template: qwen2_vl         
 media_dir: /wekafs/takisobe/haisenhe/DataPipeline
 cutoff_len: 131072
