@@ -1,0 +1,5 @@
+model_name_or_path: /wekafs/takisobe/zxy/models/Qwen2.5-VL-7B-Instruct
+adapter_name_or_path: /wekafs/takisobe/zxy/models/sft/qwen-ir/checkpoint-80/
+template: qwen2_vl
+infer_backend: huggingface  # choices: [huggingface, vllm, sglang]
+trust_remote_code: true
