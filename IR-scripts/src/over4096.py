@@ -1,41 +1,47 @@
 #!/usr/bin/env python3
 """
-统计指定目录下总像素值大于4096*4096的PNG图片数量
+统计并处理总像素值大于指定阈值的PNG图片
+功能：
+1. 统计总像素值大于4096*4096的图片数量
+2. 将总像素值大于4096*8192的图片resize到合适尺寸（保持纵横比，最长边为4096）
 """
 
 import os
 from pathlib import Path
 from PIL import Image
 
-def count_large_images(directory_path, pixel_threshold=4096*4096):
+def count_and_find_large_images(directory_path, stat_threshold=4096*4096, resize_threshold=4096*8192):
     """
-    统计目录中总像素值大于指定阈值的PNG图片数量
+    统计目录中总像素值大于指定阈值的PNG图片数量，并找出需要resize的图片
     
     Args:
         directory_path: 图片目录路径
-        pixel_threshold: 总像素值阈值（默认4096*4096 = 16,777,216）
+        stat_threshold: 统计阈值（默认4096*4096 = 16,777,216）
+        resize_threshold: 需要resize的阈值（默认4096*8192 = 33,554,432）
     
     Returns:
-        tuple: (大于阈值的图片数量, 总图片数量, 大于阈值的图片列表)
+        tuple: (统计信息字典, 需要resize的图片列表)
     """
     directory = Path(directory_path)
     
     if not directory.exists():
         print(f"错误: 目录不存在 - {directory_path}")
-        return 0, 0, []
+        return None, []
     
     # 查找所有PNG文件
     png_files = list(directory.glob("*.png"))
     png_files.extend(directory.glob("*.PNG"))  # 包含大写扩展名
     
     total_count = len(png_files)
-    over_threshold_count = 0
-    over_threshold_files = []
+    over_stat_threshold = 0
+    over_resize_threshold = 0
+    need_resize_files = []
     
     print(f"正在扫描目录: {directory_path}")
     print(f"找到 {total_count} 张PNG图片")
-    print(f"像素值阈值设置: {pixel_threshold:,} (4096x4096)")
-    print("-" * 60)
+    print(f"统计阈值: {stat_threshold:,} (4096x4096)")
+    print(f"Resize阈值: {resize_threshold:,} (4096x8192)")
+    print("-" * 70)
     
     for img_path in png_files:
         try:
@@ -43,46 +49,139 @@ def count_large_images(directory_path, pixel_threshold=4096*4096):
                 width, height = img.size
                 total_pixels = width * height
                 
-                # 检查总像素值是否大于阈值
-                if total_pixels > pixel_threshold:
-                    over_threshold_count += 1
-                    over_threshold_files.append({
-                        'path': img_path.name,
+                # 统计大于stat_threshold的图片
+                if total_pixels > stat_threshold:
+                    over_stat_threshold += 1
+                    
+                # 找出需要resize的图片
+                if total_pixels > resize_threshold:
+                    over_resize_threshold += 1
+                    need_resize_files.append({
+                        'path': img_path,
                         'size': (width, height),
                         'pixels': total_pixels
                     })
-                    print(f"✓ {img_path.name}: {width}x{height} = {total_pixels:,} 像素")
+                    print(f"🔍 需要resize: {img_path.name}: {width}x{height} = {total_pixels:,} 像素")
         except Exception as e:
             print(f"✗ 无法读取 {img_path.name}: {e}")
     
-    return over_threshold_count, total_count, over_threshold_files
+    stats = {
+        'total': total_count,
+        'over_stat': over_stat_threshold,
+        'over_resize': over_resize_threshold
+    }
+    
+    return stats, need_resize_files
+
+
+def resize_image(img_path, max_size=4096):
+    """
+    将图片resize到指定尺寸（保持纵横比，最长边为max_size），直接覆盖原文件
+    
+    Args:
+        img_path: 原图片路径（Path对象）
+        max_size: 最长边的最大尺寸
+    
+    Returns:
+        bool: 是否成功
+    """
+    try:
+        # 读取原图片
+        img = Image.open(img_path)
+        width, height = img.size
+        
+        # 计算缩放比例（保持纵横比）
+        if width > height:
+            new_width = max_size
+            new_height = int(height * (max_size / width))
+        else:
+            new_height = max_size
+            new_width = int(width * (max_size / height))
+        
+        # Resize图片（使用高质量的LANCZOS重采样）
+        resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        
+        # 关闭原图片
+        img.close()
+        
+        # 直接覆盖原文件
+        resized_img.save(img_path, 'PNG')
+        
+        new_pixels = new_width * new_height
+        print(f"  ✓ {img_path.name}: {width}x{height} → {new_width}x{new_height} ({new_pixels:,} 像素)")
+        return True
+            
+    except Exception as e:
+        print(f"  ✗ 处理失败 {img_path.name}: {e}")
+        return False
 
 
 def main():
-    # 目标目录
-    target_directory = "/wekafs/takisobe/haisenhe/DataPipeline/unsplash1/images/degraded"
+    # 配置参数
+    source_directory = "/wekafs/takisobe/haisenhe/DataPipeline/unsplash1/images/degraded"
     
-    # 统计（总像素值大于4096*4096）
-    pixel_threshold = 4096 * 4096
-    over_count, total_count, large_files = count_large_images(
-        target_directory, 
-        pixel_threshold=pixel_threshold
+    stat_threshold = 4096 * 4096    # 统计阈值：16,777,216像素
+    resize_threshold = 4096 * 8192  # Resize阈值：33,554,432像素
+    max_size = 4096                 # Resize后最长边的尺寸
+    
+    print("=" * 70)
+    print("图片统计与处理工具")
+    print("=" * 70)
+    
+    # 第一步：扫描并统计
+    stats, need_resize_files = count_and_find_large_images(
+        source_directory,
+        stat_threshold=stat_threshold,
+        resize_threshold=resize_threshold
     )
     
-    # 输出结果
-    print("=" * 60)
-    print(f"\n统计结果:")
-    print(f"  总图片数量: {total_count}")
-    print(f"  像素值大于{pixel_threshold:,}的图片数量: {over_count}")
+    if stats is None:
+        return
     
-    if total_count > 0:
-        percentage = (over_count / total_count) * 100
-        print(f"  占比: {percentage:.2f}%")
+    # 输出统计结果
+    print("\n" + "=" * 70)
+    print("统计结果:")
+    print(f"  总图片数量: {stats['total']}")
+    print(f"  像素值大于{stat_threshold:,}的图片数量: {stats['over_stat']}")
+    print(f"  像素值大于{resize_threshold:,}的图片数量: {stats['over_resize']} (需要resize)")
     
-    # if large_files:
-    #     print(f"\n像素值大于4096x4096的图片详情:")
-    #     for file_info in large_files:
-    #         print(f"  - {file_info['path']}: {file_info['size'][0]}x{file_info['size'][1]} = {file_info['pixels']:,} 像素")
+    if stats['total'] > 0:
+        percentage1 = (stats['over_stat'] / stats['total']) * 100
+        percentage2 = (stats['over_resize'] / stats['total']) * 100
+        print(f"  大于4096x4096占比: {percentage1:.2f}%")
+        print(f"  大于4096x8192占比: {percentage2:.2f}%")
+    
+    # 第二步：Resize处理
+    if need_resize_files:
+        print("\n" + "=" * 70)
+        print(f"⚠️  警告: 即将覆盖 {len(need_resize_files)} 张原始图片文件！")
+        print("=" * 70)
+        
+        # 确认操作
+        response = input("确认要覆盖原文件吗? (输入 yes 继续): ")
+        if response.lower() != 'yes':
+            print("操作已取消。")
+            return
+        
+        print("\n" + "=" * 70)
+        print(f"开始处理 {len(need_resize_files)} 张图片...")
+        print("-" * 70)
+        
+        # 处理每张图片
+        success_count = 0
+        for file_info in need_resize_files:
+            if resize_image(file_info['path'], max_size=max_size):
+                success_count += 1
+        
+        # 输出处理结果
+        print("\n" + "=" * 70)
+        print("处理完成!")
+        print(f"  成功处理: {success_count}/{len(need_resize_files)} 张图片")
+        print(f"  原文件已被覆盖")
+    else:
+        print("\n没有需要resize的图片。")
+    
+    print("=" * 70)
 
 
 if __name__ == "__main__":
