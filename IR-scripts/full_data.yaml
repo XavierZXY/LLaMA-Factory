@@ -12,7 +12,7 @@ lora_rank: 16
 lora_target: all
 
 ### dataset
-dataset: la1,la2,la3,la4          
+dataset: la1,la2,la3,la4,unsplash1,unsplash2          
 template: qwen2_vl         
 media_dir: /wekafs/takisobe/haisenhe/DataPipeline
 cutoff_len: 131072
@@ -44,7 +44,7 @@ ddp_timeout: 180000000
 resume_from_checkpoint: null
 
 ### eval
-val_size: 0.05
+val_size: 0.01
 per_device_eval_batch_size: 1
 eval_strategy: steps
 eval_steps: 50
