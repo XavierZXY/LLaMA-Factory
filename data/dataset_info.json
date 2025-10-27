@@ -828,5 +828,19 @@
       "user_tag": "user",
       "assistant_tag": "assistant"
     }
+  },
+  "unsplash3": {
+    "file_name": "/wekafs/takisobe/haisenhe/DataPipeline/unsplash2/train_dataset.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
   }
 }
