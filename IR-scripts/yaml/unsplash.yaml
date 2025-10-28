@@ -12,7 +12,7 @@ lora_rank: 16
 lora_target: all
 
 ### dataset
-dataset: unsplash3          
+dataset: unsplash1-2          
 template: qwen2_vl         
 media_dir: /wekafs/takisobe/haisenhe/DataPipeline
 cutoff_len: 131072
@@ -22,18 +22,18 @@ preprocessing_num_workers: 64
 dataloader_num_workers: 64
 
 ### output
-output_dir: /wekafs/takisobe/zxy/models/sft/qwen-ir-unsplash3
+output_dir: /wekafs/takisobe/zxy/models/sft/qwen-ir-unsplash1-2
 logging_steps: 1
 save_steps: 20
 plot_loss: true
 overwrite_output_dir: true
 save_only_model: false
 report_to: wandb  # choices: [none, wandb, tensorboard, swanlab, mlflow]
-run_name: qwen2_5vl_unsplash3_only
+run_name: qwen2_5vl_unsplash1-2_only
 
 ### train
 per_device_train_batch_size: 2
-gradient_accumulation_steps: 1
+gradient_accumulation_steps: 2
 learning_rate: 2.0e-4
 num_train_epochs: 3.0
 lr_scheduler_type: cosine
