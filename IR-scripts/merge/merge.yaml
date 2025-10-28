@@ -2,12 +2,12 @@
 
 ### model
 model_name_or_path: /wekafs/takisobe/zxy/models/Qwen2.5-VL-7B-Instruct
-adapter_name_or_path: /wekafs/takisobe/zxy/models/sft/qwen-ir-full/checkpoint-300/
+adapter_name_or_path: /wekafs/takisobe/zxy/models/sft/qwen-ir-unsplash1-2/checkpoint-195
 template: qwen2_vl
 trust_remote_code: true
 
 ### export
-export_dir: /wekafs/takisobe/zxy/models/sft/qwen-ir-full/merged/300/
+export_dir: /wekafs/takisobe/zxy/models/sft/qwen-ir-unsplash1-2/merged/195/
 export_size: 5
 export_device: auto  # choices: [cpu, auto]
 export_legacy_format: false
